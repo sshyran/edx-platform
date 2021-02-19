@@ -7,17 +7,10 @@ import all the Studio code.
 
 import os
 
-from lms.envs.devstack import *  # lint-amnesty, pylint: disable=wildcard-import
-from cms.envs.devstack import (  # lint-amnesty, pylint: disable=unused-import
-    ADVANCED_PROBLEM_TYPES,
-    COURSE_IMPORT_EXPORT_STORAGE,
-    GIT_EXPORT_DEFAULT_IDENT,
-    LIBRARY_AUTHORING_MICROFRONTEND_URL,
-    SCRAPE_YOUTUBE_THUMBNAILS_JOB_QUEUE,
-    VIDEO_TRANSCRIPT_MIGRATIONS_JOB_QUEUE,
-    UPDATE_SEARCH_INDEX_JOB_QUEUE,
-)
-
+if os.environ['EDX_PLATFORM_SETTINGS'] == 'devstack_docker':
+    from lms.envs.devstack_docker import *  # lint-amnesty, pylint: disable=wildcard-import
+else:
+    from lms.envs.devstack import *  # lint-amnesty, pylint: disable=wildcard-import
 
 # Turn on all the boolean feature flags, so that conditionally included
 # API endpoints will be found.
