@@ -7,15 +7,12 @@ import ddt
 from django.test import TestCase
 from django.test.client import RequestFactory
 from edx_django_utils.cache import RequestCache
+from edx_toggles.toggles import LegacyWaffleFlagNamespace
 from mock import patch
 from opaque_keys.edx.keys import CourseKey
 from waffle.testutils import override_flag
 
-from .. import (
-    CourseWaffleFlag,
-    WaffleFlagNamespace,
-    WaffleSwitchNamespace,
-)
+from .. import CourseWaffleFlag
 from ..models import WaffleFlagCourseOverrideModel
 
 
@@ -33,7 +30,7 @@ class TestCourseWaffleFlag(TestCase):
 
     TEST_COURSE_KEY = CourseKey.from_string("edX/DemoX/Demo_Course")
     TEST_COURSE_2_KEY = CourseKey.from_string("edX/DemoX/Demo_Course_2")
-    TEST_NAMESPACE = WaffleFlagNamespace(NAMESPACE_NAME)
+    TEST_NAMESPACE = LegacyWaffleFlagNamespace(NAMESPACE_NAME)
     TEST_COURSE_FLAG = CourseWaffleFlag(TEST_NAMESPACE, FLAG_NAME, __name__)
 
     def setUp(self):
@@ -127,14 +124,3 @@ class TestCourseWaffleFlag(TestCase):
         )
         with override_flag(self.NAMESPACED_FLAG_NAME, active=True):
             assert test_course_flag.is_enabled(self.TEST_COURSE_KEY) is True
-
-
-class DeprecatedWaffleFlagTests(TestCase):
-    """
-    Tests for the deprecated waffle methods, including override and import paths.
-    """
-
-    def test_waffle_switch_namespace_override(self):
-        namespace = WaffleSwitchNamespace("namespace")
-        with namespace.override("waffle_switch1", True):
-            assert namespace.is_enabled('waffle_switch1')

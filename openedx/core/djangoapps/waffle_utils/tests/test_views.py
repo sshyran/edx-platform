@@ -4,18 +4,22 @@ Tests for waffle utils views.
 from django.conf import settings
 from django.test import TestCase
 from django.test.utils import override_settings
-from edx_toggles.toggles import SettingDictToggle, SettingToggle
+from edx_toggles.toggles import (
+    LegacyWaffleFlagNamespace,
+    SettingDictToggle,
+    SettingToggle
+)
 from edx_toggles.toggles.testutils import override_waffle_flag
 from rest_framework.test import APIRequestFactory
 from waffle.testutils import override_switch
 
 from common.djangoapps.student.tests.factories import UserFactory
 
-from .. import WaffleFlag, WaffleFlagNamespace
+from .. import WaffleFlag
 from .. import models
 from .. import views as toggle_state_views
 
-TEST_WAFFLE_FLAG_NAMESPACE = WaffleFlagNamespace("test")
+TEST_WAFFLE_FLAG_NAMESPACE = LegacyWaffleFlagNamespace("test")
 TEST_WAFFLE_FLAG = WaffleFlag(TEST_WAFFLE_FLAG_NAMESPACE, "flag", __name__)
 
 
