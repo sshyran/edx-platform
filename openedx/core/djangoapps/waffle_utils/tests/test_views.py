@@ -5,9 +5,10 @@ from django.conf import settings
 from django.test import TestCase
 from django.test.utils import override_settings
 from edx_toggles.toggles import (
+    LegacyWaffleFlag,
     LegacyWaffleFlagNamespace,
     SettingDictToggle,
-    SettingToggle
+    SettingToggle,
 )
 from edx_toggles.toggles.testutils import override_waffle_flag
 from rest_framework.test import APIRequestFactory
@@ -15,12 +16,11 @@ from waffle.testutils import override_switch
 
 from common.djangoapps.student.tests.factories import UserFactory
 
-from .. import WaffleFlag
 from .. import models
 from .. import views as toggle_state_views
 
 TEST_WAFFLE_FLAG_NAMESPACE = LegacyWaffleFlagNamespace("test")
-TEST_WAFFLE_FLAG = WaffleFlag(TEST_WAFFLE_FLAG_NAMESPACE, "flag", __name__)
+TEST_WAFFLE_FLAG = LegacyWaffleFlag(TEST_WAFFLE_FLAG_NAMESPACE, "flag", __name__)
 
 
 # TODO: Missing coverage for:
@@ -120,7 +120,7 @@ class ToggleStateViewTests(TestCase):  # lint-amnesty, pylint: disable=missing-c
 
     def test_code_owners_without_module_information(self):
         # Create a waffle flag without any associated module_name
-        waffle_flag = WaffleFlag(TEST_WAFFLE_FLAG_NAMESPACE, "flag2", module_name=None)
+        waffle_flag = LegacyWaffleFlag(TEST_WAFFLE_FLAG_NAMESPACE, "flag2", module_name=None)
         response = self._get_toggle_state_response(is_staff=True)
 
         result = [
