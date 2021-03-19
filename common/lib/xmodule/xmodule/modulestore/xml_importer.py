@@ -357,12 +357,12 @@ class ImportManager:
                     all_assets.append(asset_md)
         except OSError as os_exc:
             msg = f'No {assets_filename} file is present with asset metadata.'
-            logging.error(f'Course import {self.target_id}: {msg}')
-            monitor_import_failure(self.target_id, 'Updating', msg, os_exc)
+            logging.error(f'Course import {course_id}: {msg}')
+            monitor_import_failure(course_id, 'Updating', msg, os_exc)
             return
         except Exception as exc:  # pylint: disable=W0703
-            monitor_import_failure(self.target_id, 'Updating', exception=exc)
-            logging.exception(f'Course import {self.target_id}: Error while parsing asset xml.')
+            monitor_import_failure(course_id, 'Updating', exception=exc)
+            logging.exception(f'Course import {course_id}: Error while parsing asset xml.')
             if self.raise_on_failure:  # lint-amnesty, pylint: disable=no-else-raise
                 raise
             else:
@@ -479,7 +479,7 @@ class ImportManager:
                         )
                     except Exception:
                         log.exception(
-                            f'Course import {self.target_id}: failed to import module location {child.location}'
+                            f'Course import {dest_id}: failed to import module location {child.location}'
                         )
                         raise
 
@@ -502,7 +502,7 @@ class ImportManager:
                     runtime=courselike.runtime,
                 )
             except Exception:
-                msg = f'Course import {self.target_id}: failed to import module location {leftover}'
+                msg = f'Course import {dest_id}: failed to import module location {leftover}'
                 log.error(msg)
                 raise
 

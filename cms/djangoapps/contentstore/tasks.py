@@ -423,10 +423,10 @@ def import_olx(self, user_id, course_key_string, archive_path, archive_name, lan
         """Return True if user has studio write access to the given course."""
         has_access = has_course_author_access(user, courselike_key)
         if not has_access:
-            message = 'Permission denied'
+            message = f'User permission denied: {user.username}'
             with translation_language(language):
-                self.status.fail(_(message))
-            LOGGER.error(f'{log_prefix}: {message}: {user.username}')
+                self.status.fail(_('Permission denied'))
+            LOGGER.error(f'{log_prefix}: {message}')
             monitor_import_failure(courselike_key, current_step, message=message)
         return has_access
 
@@ -446,9 +446,9 @@ def import_olx(self, user_id, course_key_string, archive_path, archive_name, lan
         archive_path_exists = course_import_export_storage.exists(archive_path)
 
         if not archive_path_exists:
+            message = f'Uploaded file {archive_path} not found'
             with translation_language(language):
                 self.status.fail(_('Tar file not found'))
-            message = f'Uploaded file {archive_path} not found'
             LOGGER.error(f'{log_prefix}: {message}')
             monitor_import_failure(courselike_key, current_step, message=message)
         return archive_path_exists

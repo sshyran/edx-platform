@@ -14,7 +14,6 @@ from contextlib import contextmanager
 from importlib import import_module
 
 from django.utils.encoding import python_2_unicode_compatible
-from edx_django_utils.monitoring import set_custom_attribute, set_custom_attributes_for_course_key
 from fs.osfs import OSFS
 from lazy import lazy
 from lxml import etree
