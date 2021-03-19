@@ -416,7 +416,7 @@ def import_olx(self, user_id, course_key_string, archive_path, archive_name, lan
             with translation_language(language):
                 self.status.fail(_('Unknown User ID: {0}').format(user_id))
             LOGGER.error(f'{log_prefix}: Unknown User: {user_id}')
-            monitor_import_failure(courselike_key, current_step, exc)
+            monitor_import_failure(courselike_key, current_step, exception=exc)
             return
 
     def user_has_access(user):
@@ -521,7 +521,7 @@ def import_olx(self, user_id, course_key_string, archive_path, archive_name, lan
 
         self.status.fail(str(exception))
         LOGGER.exception(f'{log_prefix}: Unknown error while unpacking', exc_info=True)
-        monitor_import_failure(courselike_key, current_step, exception)
+        monitor_import_failure(courselike_key, current_step, exception=exception)
         return
 
     # try-finally block for proper clean up after receiving file.
@@ -533,7 +533,7 @@ def import_olx(self, user_id, course_key_string, archive_path, archive_name, lan
             with translation_language(language):
                 self.status.fail(_('Unsafe tar file. Aborting import.'))
             LOGGER.error(f'{log_prefix}: Unsafe tar file')
-            monitor_import_failure(courselike_key, current_step, exc)
+            monitor_import_failure(courselike_key, current_step, exception=exc)
             return
         finally:
             tar_file.close()
@@ -598,7 +598,7 @@ def import_olx(self, user_id, course_key_string, archive_path, archive_name, lan
         msg = str(exception)
         LOGGER.exception(f'{log_prefix}: Unknown error while updating course {msg}')
         self.status.fail(msg)
-        monitor_import_failure(courselike_key, current_step, exception, msg)
+        monitor_import_failure(courselike_key, current_step, exception=exception)
     finally:
         if course_dir.isdir():
             shutil.rmtree(course_dir)

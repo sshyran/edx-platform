@@ -16,8 +16,7 @@ def monitor_import_failure(course_key, import_step, message=None, exception=None
     module_and_class = f'{exception_module}{separator}{exception.__class__.__name__}'
     exc_message = str(exception)
 
-    set_custom_attribute('course_import_failure', True)
-    set_custom_attribute('course_import_failure_step', import_step)
+    set_custom_attribute('course_import_failure', import_step)
     set_custom_attributes_for_course_key(course_key)
     if message:
         set_custom_attribute('course_import_failure_message', message)

@@ -381,7 +381,7 @@ class XMLModuleStore(ModuleStoreReadBase):
             log.exception(msg)
             errorlog.tracker(msg)
             self.errored_courses[course_dir] = errorlog
-            monitor_import_failure(target_course_id, 'Updating', 'Loading courselike failed', exc)
+            monitor_import_failure(target_course_id, 'Updating', exception=exc)
 
         if course_descriptor is None:
             pass

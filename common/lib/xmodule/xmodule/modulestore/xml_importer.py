@@ -175,7 +175,7 @@ class StaticContentImporter:  # lint-amnesty, pylint: disable=missing-class-docs
         except Exception as err:  # lint-amnesty, pylint: disable=broad-except
             msg = f'Error importing {file_subpath}, error={err}'
             log.exception(f'Course import {self.target_id}: {msg}')
-            monitor_import_failure(self.target_id, 'Updating', msg, err)
+            monitor_import_failure(self.target_id, 'Updating', exception=err)
 
         return file_subpath, asset_key
 

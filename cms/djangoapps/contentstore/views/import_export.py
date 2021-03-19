@@ -124,6 +124,7 @@ def _write_chunk(request, courselike_key):
     course_dir = data_root / subdir
     filename = request.FILES['course-data'].name
     set_custom_attributes_for_course_key(courselike_key)
+    current_step = 'Uploading'
 
     def error_response(message, status):
         """Returns Json error response"""
@@ -138,7 +139,7 @@ def _write_chunk(request, courselike_key):
         if not filename.endswith('.tar.gz'):
             error_message = _('We only support uploading a .tar.gz file.')
             _save_request_status(request, courselike_string, -1)
-            monitor_import_failure(courselike_key, 'Uploading', message=error_message)
+            monitor_import_failure(courselike_key, current_step, message=error_message)
             return error_response(error_message, 415)
 
         temp_filepath = course_dir / filename
@@ -168,7 +169,7 @@ def _write_chunk(request, courselike_key):
                 error_message = _('Some chunks missed during file upload. Please try again')
                 _save_request_status(request, courselike_string, -1)
                 log.error(f'Course Import {courselike_key}: {error_message}')
-                monitor_import_failure(courselike_key, 'Uploading', message=error_message)
+                monitor_import_failure(courselike_key, current_step, message=error_message)
                 return error_response(error_message, status=409)
 
             size = os.path.getsize(temp_filepath)
@@ -179,7 +180,7 @@ def _write_chunk(request, courselike_key):
                 error_message = _('File upload corrupted. Please try again')
                 _save_request_status(request, courselike_string, -1)
                 log.error(f'Course import {courselike_key}: A chunk has been missed')
-                monitor_import_failure(courselike_key, 'Uploading', message=error_message)
+                monitor_import_failure(courselike_key, current_step, message=error_message)
                 return error_response(error_message, status=409)
 
             # The last request sometimes comes twice. This happens because
@@ -220,7 +221,7 @@ def _write_chunk(request, courselike_key):
             shutil.rmtree(course_dir)
             log.info("Course import %s: Temp data cleared", courselike_key)
 
-        monitor_import_failure(courselike_key, 'Uploading', exception=exception)
+        monitor_import_failure(courselike_key, current_step, exception=exception)
         log.exception(f'Course import {courselike_key}: error importing course.')
         return error_response(str(exception), 400)
 
